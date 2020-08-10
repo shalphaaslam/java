@@ -53,7 +53,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		// @formatter:off
-		http.csrf().disable().exceptionHandling().authenticationEntryPoint(problemSupport)
+		http.csrf().disable().addFilterBefore(jwtFilter, CorsFilter.class)
+				.exceptionHandling().authenticationEntryPoint(problemSupport)
 				.accessDeniedHandler(problemSupport).and().headers()
 				.contentSecurityPolicy(
 						"default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:")
@@ -79,12 +80,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Bean
 	public JwtDecoder jwtDecoder() {
 		try {
-			NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(
-					(null != TenantContext.getLiveTenantUri()) ? TenantContext.getLiveTenantUri() : issuerUri);
+			final String tenantIssuerUri = (null != TenantContext.getLiveTenantUri()) ? TenantContext.getLiveTenantUri() : issuerUri;
+			NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(tenantIssuerUri);
 
 			OAuth2TokenValidator<Jwt> audienceValidator = new AudienceValidator(
 					jHipsterProperties.getSecurity().getOauth2().getAudience());
-			OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuerUri);
+			OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(tenantIssuerUri);
 			OAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(withIssuer,
 					audienceValidator);
 
