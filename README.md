@@ -13,6 +13,8 @@ Initially Jhipster allowed only users belonging to one realm[tenant] as configur
 
 Supporting package(./config/util) added which consists of the filter class[JwtFilter] which filters(supports) the requests allowing to flow into the service.
 
+Further tenant level data filter for individual API's response result are expected to be handled in the Database query operations based on the tenant discriminator added in the service.
+
 NOTE:
 Since the user entity is edited in order to support multi tenant, the Jhipster gateway through which the request for this service is expected to flow, should also be edited with the similar changes in case tenant information is required to be maintained in gateway level.
 
