@@ -7,12 +7,14 @@ This is a "microservice" application intended to be part of a microservice archi
 This application is configured for Service Discovery and Configuration with Consul. On launch, it will refuse to start if it is not able to connect to Consul at [http://localhost:8500](http://localhost:8500). For more information, read our documentation on [Service Discovery and Configuration with Consul][].
 
 ## Changes made to make this service Multitenant aware
-This servics's user entity is added with a tenant entity which acts as the discriminator to differentiate users belonging to different tenants. Accordingly changes are made in SecurityConfiguration class which accomodates users from different tenants[eg., keycloak realm] by dynamically allowing user's validation to its corresponding realm's Issuer URI.
+This service's user entity is added with a tenant entity which acts as the discriminator to differentiate users belonging to different tenants. A tenant can have multiple users and a user can also exists in  different(multiple) tenant. Accordingly changes had to be made in the database design and models.
 
-Supporting package(./config/util) added which consists of the filter class which filters(supports) the requests flowing into the service.
+Initially Jhipster allowed only users belonging to one realm[tenant] as configured[ISSUER URI] in application.yml. Changes are made in SecurityConfiguration class which accomodates users from different tenants[eg., keycloak realm] by dynamically allowing user's validation to its corresponding realm's Issuer URI.
+
+Supporting package(./config/util) added which consists of the filter class[JwtFilter] which filters(supports) the requests allowing to flow into the service.
 
 NOTE:
-Since the user entity is edited in order to support multi tenant, the Jhipster gateway through which the request for this service is expected to flow, should also be edited with the similar changes.
+Since the user entity is edited in order to support multi tenant, the Jhipster gateway through which the request for this service is expected to flow, should also be edited with the similar changes in case tenant information is required to be maintained in gateway level.
 
 ## Development
 
