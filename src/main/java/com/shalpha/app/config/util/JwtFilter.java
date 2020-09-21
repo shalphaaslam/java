@@ -50,6 +50,7 @@ public class JwtFilter extends CorsFilter implements AuthenticationProvider {
 
 	private final CorsConfigurationSource configSource;
 	private CorsProcessor processor = new DefaultCorsProcessor();
+	private String origin = "Access-Control-Allow-Origin";
 
 	private final JHipsterProperties jHipsterProp;
 	private final SecurityProblemSupport problemSupport;
@@ -95,6 +96,12 @@ public class JwtFilter extends CorsFilter implements AuthenticationProvider {
 			response.setHeader("WWW-Authenticate", "Basic realm=\"MyRealm\"");
 			response.setStatus(401);
 		}
+
+		if(response.getHeader(origin) == null ||
+				response.getHeader(origin).isEmpty()) {
+			response.setHeader(origin, "*");
+		}
+		
 		filterChain.doFilter(request, response);
 
 	}

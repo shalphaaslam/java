@@ -30,6 +30,7 @@ import com.shalpha.app.security.oauth2.AudienceValidator;
 import com.shalpha.app.security.oauth2.JwtGrantedAuthorityConverter;
 
 import io.github.jhipster.config.JHipsterProperties;
+import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
